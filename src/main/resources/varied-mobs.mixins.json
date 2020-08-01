@@ -3,11 +3,12 @@
   "package": "it.digifox03.variedmobs.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "LivingEntityMixin"
   ],
   "client": [
     "ClientMixin",
-    "LivingEntityRendererMixin",
-    "FeatureRendererMixin"
+    "FeatureRendererMixin",
+    "LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
