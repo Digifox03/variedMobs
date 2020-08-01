@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "it.digifox03.variedmobs.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "ClientMixin",
+    "LivingEntityRendererMixin",
+    "FeatureRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

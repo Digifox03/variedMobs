@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "varied-mobs",
+  "version": "${version}",
+
+  "name": "Varied Mobs",
+  "description": "allows resource packs to have randomly selected multiple textures for mobs",
+  "authors": [
+    "Digifox03"
+  ],
+  "contact": {
+    "sources": "https://github.com/Digifox03/variedMobs"
+  },
+
+  "license": "GNU GPLv3",
+  "icon": "assets/varied-mobs/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "it.digifox03.variedmobs.VariedMobsKt::init"
+      }
+    ]
+  },
+  "mixins": [
+    "varied-mobs.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.8.7",
+    "fabric-language-kotlin": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+  }
+}
