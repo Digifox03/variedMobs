@@ -3,13 +3,14 @@ package it.digifox03.variedmobs
 import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.biome.Biome
 import kotlin.math.abs
 import kotlin.random.Random
 
 typealias Ctx = MutableMap<Identifier, Any>
 
-val LivingEntity.biome
-    get() = world.getBiome(blockPos)
+val LivingEntity.biome: Biome
+    get() = (this as VariedMobsLivingEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
 
 val Ctx.entity
     get() = this[Identifier(MODID, "entity")] as? LivingEntity ?: error("missing entity")
