@@ -10,7 +10,7 @@ import kotlin.random.Random
 typealias Ctx = MutableMap<Identifier, Any>
 
 val LivingEntity.biome: Biome
-    get() = world.getBiome(blockPos)
+    get() = (this as VariedMobsLivingEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
 
 val Ctx.entity
     get() = this[Identifier(MODID, "entity")] as? LivingEntity ?: error("missing entity")
