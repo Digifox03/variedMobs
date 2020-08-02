@@ -154,19 +154,23 @@ and 3/4, and `zombie.png` for 3/4 to 1.
 
 ##### table of value selectors
 
-| name                   | desc                        | min  | max    |
-|------------------------|-----------------------------|------|--------|
-| health-prop            | current health / max health | 0    | 1      |
-| y-prop                 | the current y position      | -inf | +inf   |
-| x-prop                 | the current x position      | -inf | +inf   |
-| z-prop                 | the current z position      | -inf | +inf   |
-| age-prop               | the mob age in ticks        | 0    | +inf   |
-| time-prop              | time of the day in ticks    | 0    | 24,000 |
-| biome-temperature-prop | the biome temperature       | 0.0  | 2.0    |
-| biome-rainfall-prop    | the biome rainfall          | 0.0  | 2.0    |
-| biome-depth-prop       | the biome depth             | 0.0  | 2.0    |
+| name                   | desc                            | min  | max    |
+|------------------------|---------------------------------|------|--------|
+| health-prop            | current health / max health     | 0    | 1      |
+| y-prop                 | the current y position          | -inf | +inf   |
+| x-prop                 | the current x position          | -inf | +inf   |
+| z-prop                 | the current z position          | -inf | +inf   |
+| age-prop               | the mob age in ticks            | 0    | +inf   |
+| time-prop              | time of the day in ticks        | 0    | 24,000 |
+| biome-temperature-prop | the biome temperature           | 0.0  | 2.0    |
+| biome-rainfall-prop    | the biome rainfall              | 0.0  | 2.0    |
+| biome-depth-prop       | the biome depth                 | 0.0  | 2.0    |
+| slot-prop              | the slot of the armor item      | 0    | 5      |
+| item-damage-prop       | the level of damage of the item | 0    | 1      |
+| cmd-prop               | the item CustomModelData        | -inf | +inf   |
 
 (do not forget to prefix the names with `varied-mobs:`, e.g.
 `varied-mobs:health-prop`)
 
-check out the [releases](https://github.com/Digifox03/variedMobs/releases) for the latest experimental version and the example resource pack
+check out the [releases](https://github.com/Digifox03/variedMobs/releases) for the latest experimental version,
+ and the example resource pack
