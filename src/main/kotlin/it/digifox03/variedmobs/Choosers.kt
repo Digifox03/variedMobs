@@ -26,10 +26,10 @@ class ResultChooser(private var result : Identifier?) : VariedChooser(id) {
     override fun choose(ctx: MutableMap<Identifier, Any>): Identifier? = result
 }
 
-class PickChooser(private var weights : List<Double>, private var choices : List<VariedChooser>) : VariedChooser(id) {
+class PickChooser(private var weights : List<Double>?, private var choices : List<VariedChooser>) : VariedChooser(id) {
     companion object { val id = Identifier(MODID, "pick") }
     override fun choose(ctx: Ctx): Identifier? =
-            select(choices.zip(weights).toMutableList(), ctx)
+            select(choices.zip(weights ?: generateSequence { 1.0 }.asIterable()).toMutableList(), ctx)
 
     private tailrec fun select(opts: MutableList<Pair<VariedChooser, Double>>, ctx: Ctx): Identifier? =
             if (opts.isEmpty()) {
