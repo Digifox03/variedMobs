@@ -3,12 +3,13 @@ package it.digifox03.variedmobs
 import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.biome.Biome
 import kotlin.math.abs
 import kotlin.random.Random
 
 typealias Ctx = MutableMap<Identifier, Any>
 
-val LivingEntity.biome
+val LivingEntity.biome: Biome
     get() = world.getBiome(blockPos)
 
 val Ctx.entity
@@ -20,12 +21,12 @@ val Ctx.random
 fun Ctx.clone() = toMap().toMutableMap()
 
 
-class ResultChooser(var result : Identifier?) : VariedChooser(id) {
+class ResultChooser(private var result : Identifier?) : VariedChooser(id) {
     companion object { val id = Identifier(MODID, "result") }
     override fun choose(ctx: MutableMap<Identifier, Any>): Identifier? = result
 }
 
-class PickChooser(var weights : List<Double>, var choices : List<VariedChooser>) : VariedChooser(id) {
+class PickChooser(private var weights : List<Double>, private var choices : List<VariedChooser>) : VariedChooser(id) {
     companion object { val id = Identifier(MODID, "pick") }
     override fun choose(ctx: Ctx): Identifier? =
             select(choices.zip(weights).toMutableList(), ctx)
@@ -38,7 +39,7 @@ class PickChooser(var weights : List<Double>, var choices : List<VariedChooser>)
             }
 }
 
-class SeqChooser(var choices: List<VariedChooser>) : VariedChooser(id) {
+class SeqChooser(private var choices: List<VariedChooser>) : VariedChooser(id) {
     companion object { val id = Identifier(MODID, "seq") }
 
     override fun choose(ctx: Ctx): Identifier? {
@@ -52,14 +53,14 @@ class SeqChooser(var choices: List<VariedChooser>) : VariedChooser(id) {
     }
 }
 
-abstract class BoolChooser(type: Identifier, var value: VariedChooser) : VariedChooser(type) {
+abstract class BoolChooser(type: Identifier, private var value: VariedChooser) : VariedChooser(type) {
     override fun choose(ctx: Ctx): Identifier? =
         if (prop(ctx.clone())) value.choose(ctx.clone()) else null
 
     abstract fun prop(ctx: Ctx): Boolean
 }
 
-class BiomeChooser(var biome: List<Identifier>, value: VariedChooser) : BoolChooser(id, value) {
+class BiomeChooser(private var biome: List<Identifier>, value: VariedChooser) : BoolChooser(id, value) {
     companion object { val id = Identifier(MODID, "biome") }
     override fun prop(ctx: Ctx): Boolean =
         Registry.BIOME.getId(ctx.entity.biome) in biome
@@ -150,7 +151,7 @@ class TimeChooser(
 class WeatherChooser(
     positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
 ) : BoundedPropChooser(id, positions, weights, choices) {
-    companion object { val id = Identifier(MODID, "age-prop") }
+    companion object { val id = Identifier(MODID, "weather-prop") }
     override fun getter(ctx: Ctx) = when {
         ctx.entity.world.isThundering -> 2.0
         ctx.entity.world.isRaining    -> 1.0

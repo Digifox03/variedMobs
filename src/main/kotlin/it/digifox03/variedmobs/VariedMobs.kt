@@ -6,9 +6,8 @@ import net.minecraft.resource.ResourceManager
 import net.minecraft.resource.SinglePreparationResourceReloadListener
 import net.minecraft.util.Identifier
 import net.minecraft.util.profiler.Profiler
-import kotlin.reflect.KClass
 
-val MODID = "varied-mobs"
+const val MODID = "varied-mobs"
 
 @Suppress("unused")
 fun init() {
@@ -25,7 +24,7 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
             Identifier(id.namespace, id.path
                 .split(".").dropLast(1).joinToString("")
                 .let { if (it == "") id.path else it }
-                .removePrefix("random/").let { "random/$it.json" }
+                .removePrefix("varied/").let { "varied/$it.json" }
             )
 
 
@@ -37,7 +36,7 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
 
     override fun prepare(manager: ResourceManager, profiler: Profiler): Map<Identifier, VariedChooser> = profiler.profiling {
         manager.allNamespaces.toList().flatMap { namespace ->
-            manager.findResources(Identifier(namespace, "random")) { true }
+            manager.findResources(Identifier(namespace, "varied")) { true }
         }.map {
             it to parseVaried(manager.getResource(it))
         }.toMap()

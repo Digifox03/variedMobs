@@ -9,19 +9,22 @@ import java.lang.reflect.Type
 val choosers = mutableMapOf<Identifier, Class<out VariedChooser>>()
 
 fun initChoosers() {
-    choosers[ResultChooser.id]      = ResultChooser::class.java
-    choosers[PickChooser.id]        = PickChooser::class.java
-    choosers[SeqChooser.id]         = SeqChooser::class.java
-    choosers[BiomeChooser.id]       = BiomeChooser::class.java
-    choosers[NameChooser.id]        = NameChooser::class.java
-    choosers[BabyChooser.id]        = BabyChooser::class.java
-    choosers[HealthChooser.id]      = HealthChooser::class.java
-    choosers[CoordinateXChooser.id] = CoordinateXChooser::class.java
-    choosers[CoordinateYChooser.id] = CoordinateYChooser::class.java
-    choosers[CoordinateZChooser.id] = CoordinateZChooser::class.java
-    choosers[AgeChooser.id]         = AgeChooser::class.java
-    choosers[TimeChooser.id]        = TimeChooser::class.java
-    choosers[WeatherChooser.id]     = WeatherChooser::class.java
+    choosers[ResultChooser.id]              = ResultChooser::class.java
+    choosers[PickChooser.id]                = PickChooser::class.java
+    choosers[SeqChooser.id]                 = SeqChooser::class.java
+    choosers[BiomeChooser.id]               = BiomeChooser::class.java
+    choosers[NameChooser.id]                = NameChooser::class.java
+    choosers[BabyChooser.id]                = BabyChooser::class.java
+    choosers[HealthChooser.id]              = HealthChooser::class.java
+    choosers[CoordinateXChooser.id]         = CoordinateXChooser::class.java
+    choosers[CoordinateYChooser.id]         = CoordinateYChooser::class.java
+    choosers[CoordinateZChooser.id]         = CoordinateZChooser::class.java
+    choosers[AgeChooser.id]                 = AgeChooser::class.java
+    choosers[TimeChooser.id]                = TimeChooser::class.java
+    choosers[WeatherChooser.id]             = WeatherChooser::class.java
+    choosers[BiomeTemperatureChooser.id]    = BiomeTemperatureChooser::class.java
+    choosers[BiomeRainfallChooser.id]       = BiomeRainfallChooser::class.java
+    choosers[BiomeDepthChooser.id]          = BiomeDepthChooser::class.java
 }
 
 abstract class VariedChooser(val type: Identifier) {
