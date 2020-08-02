@@ -38,6 +38,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> extends 
             method = "getRenderLayer(Lnet/minecraft/entity/LivingEntity;ZZZ)Lnet/minecraft/client/render/RenderLayer;"
     )
     public Identifier getRenderLayer(Identifier id) {
-        return VariedMobManager.INSTANCE.redirectTexture(id, variedMobs_l);
+        return VariedMobManager.INSTANCE.redirectTexture(id, variedMobs_l, null);
     }
 }

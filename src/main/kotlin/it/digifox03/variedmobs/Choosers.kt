@@ -1,5 +1,6 @@
 package it.digifox03.variedmobs
 
+import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
@@ -14,6 +15,9 @@ val LivingEntity.biome: Biome
 
 val Ctx.entity
     get() = this[Identifier(MODID, "entity")] as? LivingEntity ?: error("missing entity")
+
+val Ctx.slot
+    get() = this[Identifier(MODID, "slot")] as? EquipmentSlot
 
 val Ctx.random
     get() = this.getOrPut(Identifier(MODID, "random")) { Random(entity.uuid.leastSignificantBits) } as Random
@@ -87,6 +91,7 @@ abstract class BoundedPropChooser(
     abstract fun getter(ctx: Ctx): Double
     override fun choose(ctx: Ctx): Identifier? {
         val center = getter(ctx.clone())
+        println("$type - center: $center")
         return when {
             weights != null -> {
                 positions
@@ -98,13 +103,38 @@ abstract class BoundedPropChooser(
             else -> {
                 positions
                     .zipWithNext()
-                    .indexOfFirst { (min, max) -> center in min..max }
+                    .indexOfFirst { (min, max) -> min >= center && center < max }
                     .let { choices.getOrNull(it) }
             }
-        }?.choose(ctx.clone())
+        }?.choose(ctx.clone()).also { println("result: $it") }
     }
 }
 
+class SlotChooser(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
+) : BoundedPropChooser(id, positions, weights, choices) {
+    companion object { val id = Identifier(MODID, "slot-prop") }
+    override fun getter(ctx: Ctx) = ctx.slot?.armorStandSlotId?.toDouble() ?: 0.0
+}
+
+class CMDChooser(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
+) : BoundedPropChooser(id, positions, weights, choices) {
+    companion object { val id = Identifier(MODID, "cmd-prop") }
+    override fun getter(ctx: Ctx) = ctx
+        .slot?.let { ctx.entity.getEquippedStack(it) }
+        ?.tag?.getInt("CustomModelData")?.toDouble() ?: .0
+}
+
+class ItemDamageChooser(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
+) : BoundedPropChooser(id, positions, weights, choices) {
+    companion object { val id = Identifier(MODID, "item-damage-prop") }
+    override fun getter(ctx: Ctx) = ctx
+        .slot?.let { ctx.entity.getEquippedStack(it) }
+        ?.let { it.damage.toDouble() / it.maxDamage.toDouble() }
+        ?: 0.0
+}
 
 class HealthChooser(
     positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>

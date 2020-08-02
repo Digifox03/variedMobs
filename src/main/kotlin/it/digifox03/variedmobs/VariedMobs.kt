@@ -9,6 +9,8 @@ import net.minecraft.util.profiler.Profiler
 
 const val MODID = "varied-mobs"
 
+fun <T> Profiler.profiling(block: () -> T): T = startTick().run { block() }.also { endTick() }
+
 @Suppress("unused")
 fun init() {
     initChoosers()
@@ -17,8 +19,11 @@ fun init() {
 object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier, VariedChooser>>() {
     private lateinit var redirectMap: Map<Identifier, VariedChooser>
 
-    fun redirectTexture(id: Identifier, le: LivingEntity): Identifier =
-            redirectMap[redirectId(id)]?.let { runRedirect(it, le) } ?: id
+    fun redirectTexture(id: Identifier, le: LivingEntity, ctx: Ctx?): Identifier {
+        val ctx1 = ctx ?: mutableMapOf()
+        ctx1[Identifier(MODID, "entity")] = le
+        return redirectMap[redirectId(id)]?.let { runRedirect(it, ctx1) } ?: id
+    }
 
     private fun redirectId(id: Identifier): Identifier =
             Identifier(id.namespace, id.path
@@ -28,8 +33,8 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
             )
 
 
-    private fun runRedirect(ob: VariedChooser, le: LivingEntity): Identifier {
-        return ob.choose(mutableMapOf(Identifier(MODID, "entity") to le)) ?: Identifier("missing")
+    private fun runRedirect(ob: VariedChooser, ctx: Ctx): Identifier? {
+        return ob.choose(ctx)
     }
 
     private fun parseVaried(resource: Resource) = parseChooser(resource.inputStream)

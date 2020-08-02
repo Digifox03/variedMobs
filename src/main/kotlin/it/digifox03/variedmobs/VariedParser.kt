@@ -25,6 +25,9 @@ fun initChoosers() {
     choosers[BiomeTemperatureChooser.id]    = BiomeTemperatureChooser::class.java
     choosers[BiomeRainfallChooser.id]       = BiomeRainfallChooser::class.java
     choosers[BiomeDepthChooser.id]          = BiomeDepthChooser::class.java
+    choosers[SlotChooser.id]                = SlotChooser::class.java
+    choosers[CMDChooser.id]                 = CMDChooser::class.java
+    choosers[ItemDamageChooser.id]          = ItemDamageChooser::class.java
 }
 
 abstract class VariedChooser(val type: Identifier) {

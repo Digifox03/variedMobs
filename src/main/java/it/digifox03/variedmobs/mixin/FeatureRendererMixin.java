@@ -33,6 +33,6 @@ public abstract class FeatureRendererMixin {
             method = "renderModel(Lnet/minecraft/client/render/entity/model/EntityModel;Lnet/minecraft/util/Identifier;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFF)V"
     )
     private static Identifier newId(Identifier id) {
-        return VariedMobManager.INSTANCE.redirectTexture(id, variedMobs_l);
+        return VariedMobManager.INSTANCE.redirectTexture(id, variedMobs_l, null);
     }
 }

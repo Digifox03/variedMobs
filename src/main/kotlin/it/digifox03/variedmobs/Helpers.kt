@@ -4,7 +4,6 @@ import net.minecraft.util.profiler.Profiler
 import net.minecraft.world.biome.Biome
 import kotlin.random.Random
 
-fun <T> Profiler.profiling(block: () -> T): T = startTick().run { block() }.also { endTick() }
 fun <T> MutableList<Pair<T, Double>>.randomWPop(random: Random): T? {
     var choice = random.nextDouble(.0, fold(.0) {a, (_, b) -> a + b})
     val res = indexOfFirst { (_, b) -> choice -= b; choice <= 0 }
