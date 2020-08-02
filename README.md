@@ -168,3 +168,5 @@ and 3/4, and `zombie.png` for 3/4 to 1.
 
 (do not forget to prefix the names with `varied-mobs:`, e.g.
 `varied-mobs:health-prop`)
+
+check out the [releases](https://github.com/Digifox03/variedMobs/releases) for the latest experimental version and the example resource pack
