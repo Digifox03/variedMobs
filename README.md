@@ -20,9 +20,9 @@ be used instead.
 {
   "type": "varied-mobs:pick",
   "choices": [
-    "minecraft:varied/texture/entity/zombie/zombie-variant1.json",
-    "minecraft:varied/texture/entity/zombie/zombie-variant2.json",
-    "minecraft:varied/texture/entity/zombie/zombie-variant3.json"
+    "minecraft:varied/texture/entity/zombie/zombie-variant1.png",
+    "minecraft:varied/texture/entity/zombie/zombie-variant2.png",
+    "minecraft:varied/texture/entity/zombie/zombie-variant3.png"
   ]
 }
 ```
