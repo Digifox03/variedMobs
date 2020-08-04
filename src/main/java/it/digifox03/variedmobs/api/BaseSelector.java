@@ -1,6 +1,6 @@
 package it.digifox03.variedmobs.api;
 
-import it.digifox03.variedmobs.VariedSelector;
+import it.digifox03.variedmobs.core.VariedSelector;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 

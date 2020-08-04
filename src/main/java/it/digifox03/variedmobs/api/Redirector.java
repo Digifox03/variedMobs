@@ -1,6 +1,6 @@
 package it.digifox03.variedmobs.api;
 
-import it.digifox03.variedmobs.VariedMobManager;
+import it.digifox03.variedmobs.core.VariedMobManager;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;

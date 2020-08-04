@@ -1,7 +1,9 @@
-package it.digifox03.variedmobs
+package it.digifox03.variedmobs.core
 
 import it.digifox03.variedmobs.api.Ctx
 import it.digifox03.variedmobs.api.Redirector
+import it.digifox03.variedmobs.core.VariedSelector
+import it.digifox03.variedmobs.core.parseSelector
 import net.minecraft.entity.LivingEntity
 import net.minecraft.resource.Resource
 import net.minecraft.resource.ResourceManager
@@ -12,11 +14,6 @@ import net.minecraft.util.profiler.Profiler
 const val MODID = "varied-mobs"
 
 fun <T> Profiler.profiling(block: () -> T): T = startTick().run { block() }.also { endTick() }
-
-@Suppress("unused")
-fun init() {
-    initSelectors()
-}
 
 object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier, VariedSelector>>(), Redirector {
     private lateinit var redirectMap: Map<Identifier, VariedSelector>

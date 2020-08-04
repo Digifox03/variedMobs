@@ -1,7 +1,9 @@
-package it.digifox03.variedmobs
+package it.digifox03.variedmobs.core
 
 import com.google.gson.*
+import it.digifox03.variedmobs.api.Ctx
 import it.digifox03.variedmobs.api.SelectorRegistry
+import it.digifox03.variedmobs.selectors.*
 import net.minecraft.util.Identifier
 import java.io.InputStream
 import java.lang.reflect.Type
@@ -12,31 +14,6 @@ object SelectorRegistryImpl : SelectorRegistry {
 
     override fun register(id: Identifier, selector: Type) {
         register(id, selector)
-    }
-}
-
-fun initSelectors() {
-    SelectorRegistry.getInstance().apply {
-        register(ResultSelector.id, ResultSelector::class.java)
-        register(PickSelector.id, PickSelector::class.java)
-        register(SeqSelector.id, SeqSelector::class.java)
-        register(NotSelector.id, NotSelector::class.java)
-        register(BiomeSelector.id, BiomeSelector::class.java)
-        register(NameSelector.id, NameSelector::class.java)
-        register(BabySelector.id, BabySelector::class.java)
-        register(HealthSelector.id, HealthSelector::class.java)
-        register(CoordinateXSelector.id, CoordinateXSelector::class.java)
-        register(CoordinateYSelector.id, CoordinateYSelector::class.java)
-        register(CoordinateZSelector.id, CoordinateZSelector::class.java)
-        register(AgeSelector.id, AgeSelector::class.java)
-        register(TimeSelector.id, TimeSelector::class.java)
-        register(WeatherSelector.id, WeatherSelector::class.java)
-        register(BiomeTemperatureSelector.id, BiomeTemperatureSelector::class.java)
-        register(BiomeRainfallSelector.id, BiomeRainfallSelector::class.java)
-        register(BiomeDepthSelector.id, BiomeDepthSelector::class.java)
-        register(SlotSelector.id, SlotSelector::class.java)
-        register(CMDSelector.id, CMDSelector::class.java)
-        register(ItemDamageSelector.id, ItemDamageSelector::class.java)
     }
 }
 
@@ -78,3 +55,7 @@ fun parseSelector(input: InputStream): VariedSelector =
         exceptionOrNull()?.printStackTrace()
         getOrNull() ?: ResultSelector(null)
     }
+
+abstract class VariedSelector(val type: Identifier) {
+    abstract fun choose(ctx: Ctx): Identifier?
+}

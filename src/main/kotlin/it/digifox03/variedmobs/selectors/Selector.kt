@@ -1,11 +1,40 @@
-package it.digifox03.variedmobs
+package it.digifox03.variedmobs.selectors
 
+import it.digifox03.variedmobs.user.VariedMobsEntity
+import it.digifox03.variedmobs.core.VariedSelector
 import it.digifox03.variedmobs.api.*
+import it.digifox03.variedmobs.core.MODID
 import net.minecraft.entity.Entity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import kotlin.math.abs
+
+@Suppress("unused")
+fun init() {
+    SelectorRegistry.getInstance().apply {
+        register(ResultSelector.id, ResultSelector::class.java)
+        register(PickSelector.id, PickSelector::class.java)
+        register(SeqSelector.id, SeqSelector::class.java)
+        register(NotSelector.id, NotSelector::class.java)
+        register(BiomeSelector.id, BiomeSelector::class.java)
+        register(NameSelector.id, NameSelector::class.java)
+        register(BabySelector.id, BabySelector::class.java)
+        register(HealthSelector.id, HealthSelector::class.java)
+        register(CoordinateXSelector.id, CoordinateXSelector::class.java)
+        register(CoordinateYSelector.id, CoordinateYSelector::class.java)
+        register(CoordinateZSelector.id, CoordinateZSelector::class.java)
+        register(AgeSelector.id, AgeSelector::class.java)
+        register(TimeSelector.id, TimeSelector::class.java)
+        register(WeatherSelector.id, WeatherSelector::class.java)
+        register(BiomeTemperatureSelector.id, BiomeTemperatureSelector::class.java)
+        register(BiomeRainfallSelector.id, BiomeRainfallSelector::class.java)
+        register(BiomeDepthSelector.id, BiomeDepthSelector::class.java)
+        register(SlotSelector.id, SlotSelector::class.java)
+        register(CMDSelector.id, CMDSelector::class.java)
+        register(ItemDamageSelector.id, ItemDamageSelector::class.java)
+    }
+}
 
 val Entity.biome: Biome
     get() = (this as VariedMobsEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
@@ -208,6 +237,3 @@ class BiomeDepthSelector(
     override fun getter(ctx: Ctx): Double = ctx.entity.biome.depth.toDouble()
 }
 
-abstract class VariedSelector(val type: Identifier) {
-    abstract fun choose(ctx: Ctx): Identifier?
-}

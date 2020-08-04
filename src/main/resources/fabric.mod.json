@@ -20,7 +20,7 @@
     "client": [
       {
         "adapter": "kotlin",
-        "value": "it.digifox03.variedmobs.VariedMobsKt::init"
+        "value": "it.digifox03.variedmobs.selectors.SelectorKt::init"
       }
     ]
   },

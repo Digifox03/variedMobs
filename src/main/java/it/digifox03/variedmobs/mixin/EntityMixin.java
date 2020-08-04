@@ -1,6 +1,6 @@
 package it.digifox03.variedmobs.mixin;
 
-import it.digifox03.variedmobs.VariedMobsEntity;
+import it.digifox03.variedmobs.user.VariedMobsEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
