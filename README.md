@@ -6,10 +6,10 @@ This mod allows the resource packs creator to have multiple randomized textures 
 ### Replacing a texture
 
 With this mod, whenever minecraft tries to load the texture for an entity
-(e.g. "minecraft:texture/entity/zombie/zombie.png") it checks if a varied
+(e.g. "minecraft:textures/entity/zombie/zombie.png") it checks if a varied
 texture descriptor is present in the "varied" folder with the same name
 but with .json extension (e.g.
-"minecraft:varied/texture/entity/zombie/zombie.json").
+"minecraft:varied/textures/entity/zombie/zombie.json").
 
 If the descriptor has been found it is read to determine which texture will
 be used instead.
@@ -20,9 +20,9 @@ be used instead.
 {
   "type": "varied-mobs:pick",
   "choices": [
-    "minecraft:varied/texture/entity/zombie/zombie-variant1.png",
-    "minecraft:varied/texture/entity/zombie/zombie-variant2.png",
-    "minecraft:varied/texture/entity/zombie/zombie-variant3.png"
+    "minecraft:varied/textures/entity/zombie/zombie-variant1.png",
+    "minecraft:varied/textures/entity/zombie/zombie-variant2.png",
+    "minecraft:varied/textures/entity/zombie/zombie-variant3.png"
   ]
 }
 ```
@@ -139,10 +139,10 @@ example: health selector.
   "type": "varied-mobs:health-prop",
   "positions": [0, 0.25, 0.5, 0.75, 1],
   "choices": [
-    "minecraft:varied/texture/entity/zombie/zombie-very_hurt.png",
-    "minecraft:varied/texture/entity/zombie/zombie-hurt.png",
-    "minecraft:varied/texture/entity/zombie/zombie-slightly_hurt.png",
-    "minecraft:varied/texture/entity/zombie/zombie.png"
+    "minecraft:varied/textures/entity/zombie/zombie-very_hurt.png",
+    "minecraft:varied/textures/entity/zombie/zombie-hurt.png",
+    "minecraft:varied/textures/entity/zombie/zombie-slightly_hurt.png",
+    "minecraft:varied/textures/entity/zombie/zombie.png"
   ]
 }
 ```
