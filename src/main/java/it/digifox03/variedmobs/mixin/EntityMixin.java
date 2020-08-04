@@ -1,21 +1,23 @@
 package it.digifox03.variedmobs.mixin;
 
-import it.digifox03.variedmobs.VariedMobsLivingEntity;
+import it.digifox03.variedmobs.VariedMobsEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements VariedMobsLivingEntity {
-    public LivingEntityMixin(EntityType<?> type, World world) {
-        super(type, world);
-    }
+@Mixin(Entity.class)
+public abstract class EntityMixin implements VariedMobsEntity {
+    @Shadow
+    public World world;
+
+    @Shadow
+    abstract public BlockPos getBlockPos();
 
     @Override
     public Biome getVariedMobs_spawnBiome() {

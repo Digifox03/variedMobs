@@ -3,7 +3,7 @@
   "package": "it.digifox03.variedmobs.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "LivingEntityMixin"
+    "EntityMixin"
   ],
   "client": [
     "ClientMixin",

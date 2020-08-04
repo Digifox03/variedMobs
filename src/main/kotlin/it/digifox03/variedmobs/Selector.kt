@@ -1,14 +1,14 @@
 package it.digifox03.variedmobs
 
 import it.digifox03.variedmobs.api.*
-import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.Entity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import kotlin.math.abs
 
-val LivingEntity.biome: Biome
-    get() = (this as VariedMobsLivingEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
+val Entity.biome: Biome
+    get() = (this as VariedMobsEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
 
 class ResultSelector(private var result : Identifier?) : VariedSelector(id) {
     companion object { val id = Identifier(MODID, "result") }
@@ -64,7 +64,7 @@ class NameSelector(regex: String, value: VariedSelector) : BoolSelector(id, valu
 
 class BabySelector(value: VariedSelector) : BoolSelector(id, value) {
     companion object { val id = Identifier(MODID, "baby") }
-    override fun prop(ctx: Ctx): Boolean = ctx.entity.isBaby
+    override fun prop(ctx: Ctx): Boolean = ctx.livingEntity.isBaby
 }
 
 abstract class BoundedPropSelector(
@@ -107,7 +107,7 @@ class CMDSelector(
 ) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "cmd-prop") }
     override fun getter(ctx: Ctx) = ctx
-        .slot?.let { ctx.entity.getEquippedStack(it) }
+        .slot?.let { ctx.livingEntity.getEquippedStack(it) }
         ?.tag?.getInt("CustomModelData")?.toDouble() ?: .0
 }
 
@@ -116,7 +116,7 @@ class ItemDamageSelector(
 ) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "item-damage-prop") }
     override fun getter(ctx: Ctx) = ctx
-        .slot?.let { ctx.entity.getEquippedStack(it) }
+        .slot?.let { ctx.livingEntity.getEquippedStack(it) }
         ?.let { it.damage.toDouble() / it.maxDamage.toDouble() }
         ?: 0.0
 }
@@ -125,7 +125,7 @@ class HealthSelector(
     positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
 ) : BoundedPropSelector(id, positions, weights, choices) {
      companion object { val id = Identifier(MODID, "health-prop") }
-    override fun getter(ctx: Ctx) = (ctx.entity.health / ctx.entity.maxHealth).toDouble()
+    override fun getter(ctx: Ctx) = (ctx.livingEntity.health / ctx.livingEntity.maxHealth).toDouble()
 }
 
 class CoordinateYSelector(

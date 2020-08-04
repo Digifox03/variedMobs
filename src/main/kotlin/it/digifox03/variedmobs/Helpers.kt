@@ -9,7 +9,7 @@ fun <T> MutableList<Pair<T, Double>>.randomWPop(random: Random): T? {
     return getOrNull(res)?.first.also { removeAt(res) }
 }
 
-interface VariedMobsLivingEntity {
+interface VariedMobsEntity {
     @Suppress("PropertyName")
     val variedMobs_spawnBiome : Biome?
 }
