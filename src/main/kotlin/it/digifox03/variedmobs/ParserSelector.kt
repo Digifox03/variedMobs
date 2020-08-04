@@ -20,6 +20,7 @@ fun initSelectors() {
         register(ResultSelector.id, ResultSelector::class.java)
         register(PickSelector.id, PickSelector::class.java)
         register(SeqSelector.id, SeqSelector::class.java)
+        register(NotSelector.id, NotSelector::class.java)
         register(BiomeSelector.id, BiomeSelector::class.java)
         register(NameSelector.id, NameSelector::class.java)
         register(BabySelector.id, BabySelector::class.java)

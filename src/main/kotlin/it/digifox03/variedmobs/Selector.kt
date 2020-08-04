@@ -42,6 +42,19 @@ class SeqSelector(private var choices: List<VariedSelector>) : VariedSelector(id
     }
 }
 
+class NotSelector(private var value: VariedSelector) : VariedSelector(id) {
+    companion object { val id = Identifier(MODID, "not") }
+
+    override fun choose(ctx: Ctx): Identifier? =
+            value.choose(ctx.clone()).let {
+                if (it?.path == "") {
+                    null
+                } else {
+                    it
+                }
+            }
+}
+
 abstract class BoolSelector(type: Identifier, private var value: VariedSelector) : VariedSelector(type) {
     override fun choose(ctx: Ctx): Identifier? =
         if (prop(ctx.clone())) value.choose(ctx.clone()) else null
