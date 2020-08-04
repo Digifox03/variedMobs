@@ -1,29 +1,14 @@
 package it.digifox03.variedmobs
 
-import net.minecraft.entity.EquipmentSlot
+import it.digifox03.variedmobs.api.*
 import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import kotlin.math.abs
-import kotlin.random.Random
-
-typealias Ctx = MutableMap<Identifier, Any>
 
 val LivingEntity.biome: Biome
     get() = (this as VariedMobsLivingEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
-
-val Ctx.entity
-    get() = this[Identifier(MODID, "entity")] as? LivingEntity ?: error("missing entity")
-
-val Ctx.slot
-    get() = this[Identifier(MODID, "slot")] as? EquipmentSlot
-
-val Ctx.random
-    get() = this.getOrPut(Identifier(MODID, "random")) { Random(entity.uuid.leastSignificantBits) } as Random
-
-fun Ctx.clone() = toMap().toMutableMap()
-
 
 class ResultSelector(private var result : Identifier?) : VariedSelector(id) {
     companion object { val id = Identifier(MODID, "result") }
@@ -208,4 +193,8 @@ class BiomeDepthSelector(
 ) : BoundedPropSelector(WeatherSelector.id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "biome-depth-prop") }
     override fun getter(ctx: Ctx): Double = ctx.entity.biome.depth.toDouble()
+}
+
+abstract class VariedSelector(val type: Identifier) {
+    abstract fun choose(ctx: Ctx): Identifier?
 }

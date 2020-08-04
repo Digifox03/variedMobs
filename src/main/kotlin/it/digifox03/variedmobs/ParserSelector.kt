@@ -1,37 +1,43 @@
 package it.digifox03.variedmobs
 
 import com.google.gson.*
+import it.digifox03.variedmobs.VariedSelector
+import it.digifox03.variedmobs.mixin.api.SelectorRegistry
 import net.minecraft.util.Identifier
 import java.io.InputStream
 import java.lang.reflect.Type
 
 
-val selectors = mutableMapOf<Identifier, Class<out VariedSelector>>()
+object SelectorRegistryImpl : SelectorRegistry {
+    val selectors = mutableMapOf<Identifier, Type>()
 
-fun initSelectors() {
-    selectors[ResultSelector.id]              = ResultSelector::class.java
-    selectors[PickSelector.id]                = PickSelector::class.java
-    selectors[SeqSelector.id]                 = SeqSelector::class.java
-    selectors[BiomeSelector.id]               = BiomeSelector::class.java
-    selectors[NameSelector.id]                = NameSelector::class.java
-    selectors[BabySelector.id]                = BabySelector::class.java
-    selectors[HealthSelector.id]              = HealthSelector::class.java
-    selectors[CoordinateXSelector.id]         = CoordinateXSelector::class.java
-    selectors[CoordinateYSelector.id]         = CoordinateYSelector::class.java
-    selectors[CoordinateZSelector.id]         = CoordinateZSelector::class.java
-    selectors[AgeSelector.id]                 = AgeSelector::class.java
-    selectors[TimeSelector.id]                = TimeSelector::class.java
-    selectors[WeatherSelector.id]             = WeatherSelector::class.java
-    selectors[BiomeTemperatureSelector.id]    = BiomeTemperatureSelector::class.java
-    selectors[BiomeRainfallSelector.id]       = BiomeRainfallSelector::class.java
-    selectors[BiomeDepthSelector.id]          = BiomeDepthSelector::class.java
-    selectors[SlotSelector.id]                = SlotSelector::class.java
-    selectors[CMDSelector.id]                 = CMDSelector::class.java
-    selectors[ItemDamageSelector.id]          = ItemDamageSelector::class.java
+    override fun register(id: Identifier, selector: Type) {
+        register(id, selector)
+    }
 }
 
-abstract class VariedSelector(val type: Identifier) {
-    abstract fun choose(ctx: MutableMap<Identifier, Any>): Identifier?
+fun initSelectors() {
+    SelectorRegistry.getInstance().apply {
+        register(ResultSelector.id, ResultSelector::class.java)
+        register(PickSelector.id, PickSelector::class.java)
+        register(SeqSelector.id, SeqSelector::class.java)
+        register(BiomeSelector.id, BiomeSelector::class.java)
+        register(NameSelector.id, NameSelector::class.java)
+        register(BabySelector.id, BabySelector::class.java)
+        register(HealthSelector.id, HealthSelector::class.java)
+        register(CoordinateXSelector.id, CoordinateXSelector::class.java)
+        register(CoordinateYSelector.id, CoordinateYSelector::class.java)
+        register(CoordinateZSelector.id, CoordinateZSelector::class.java)
+        register(AgeSelector.id, AgeSelector::class.java)
+        register(TimeSelector.id, TimeSelector::class.java)
+        register(WeatherSelector.id, WeatherSelector::class.java)
+        register(BiomeTemperatureSelector.id, BiomeTemperatureSelector::class.java)
+        register(BiomeRainfallSelector.id, BiomeRainfallSelector::class.java)
+        register(BiomeDepthSelector.id, BiomeDepthSelector::class.java)
+        register(SlotSelector.id, SlotSelector::class.java)
+        register(CMDSelector.id, CMDSelector::class.java)
+        register(ItemDamageSelector.id, ItemDamageSelector::class.java)
+    }
 }
 
 object VariedSelectorSerializer : JsonSerializer<VariedSelector>, JsonDeserializer<VariedSelector> {
@@ -43,7 +49,7 @@ object VariedSelectorSerializer : JsonSerializer<VariedSelector>, JsonDeserializ
             if (json.isJsonPrimitive && json.asJsonPrimitive.isString) {
                 ResultSelector(context.deserialize(json, Identifier::class.java))
             } else {
-                selectors[context.deserialize(json.asJsonObject["type"], Identifier::class.java)]?.let {
+                SelectorRegistryImpl.selectors[context.deserialize(json.asJsonObject["type"], Identifier::class.java)]?.let {
                     context.deserialize<VariedSelector>(json, it)
                 } ?: ResultSelector(null)
             }

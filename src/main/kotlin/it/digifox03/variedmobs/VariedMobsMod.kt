@@ -1,5 +1,7 @@
 package it.digifox03.variedmobs
 
+import it.digifox03.variedmobs.api.Ctx
+import it.digifox03.variedmobs.mixin.api.Redirector
 import net.minecraft.entity.LivingEntity
 import net.minecraft.resource.Resource
 import net.minecraft.resource.ResourceManager
@@ -16,12 +18,14 @@ fun init() {
     initSelectors()
 }
 
-object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier, VariedSelector>>() {
+object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier, VariedSelector>>(), Redirector {
     private lateinit var redirectMap: Map<Identifier, VariedSelector>
 
-    fun redirectTexture(id: Identifier, le: LivingEntity, ctx: Ctx?): Identifier {
+    fun redirectTexture(id: Identifier, le: LivingEntity? = null, ctx: Ctx?): Identifier {
         val ctx1 = ctx ?: mutableMapOf()
-        ctx1[Identifier(MODID, "entity")] = le
+        if (le != null) {
+            ctx1[Identifier(MODID, "entity")] = le
+        }
         return redirectMap[redirectId(id)]?.let { runRedirect(it, ctx1) } ?: id
     }
 
@@ -49,5 +53,9 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
 
     override fun apply(loader: Map<Identifier, VariedSelector>, manager: ResourceManager, profiler: Profiler) = profiler.profiling {
         redirectMap = loader
+    }
+
+    override fun redirect(id: Identifier, ctx: MutableMap<Identifier, Any>): Identifier {
+        return redirectTexture(id, null, ctx)
     }
 }
