@@ -1,8 +1,7 @@
 package it.digifox03.variedmobs
 
 import com.google.gson.*
-import it.digifox03.variedmobs.VariedSelector
-import it.digifox03.variedmobs.mixin.api.SelectorRegistry
+import it.digifox03.variedmobs.api.SelectorRegistry
 import net.minecraft.util.Identifier
 import java.io.InputStream
 import java.lang.reflect.Type

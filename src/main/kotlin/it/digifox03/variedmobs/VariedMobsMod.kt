@@ -1,7 +1,7 @@
 package it.digifox03.variedmobs
 
 import it.digifox03.variedmobs.api.Ctx
-import it.digifox03.variedmobs.mixin.api.Redirector
+import it.digifox03.variedmobs.api.Redirector
 import net.minecraft.entity.LivingEntity
 import net.minecraft.resource.Resource
 import net.minecraft.resource.ResourceManager

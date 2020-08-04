@@ -1,4 +1,4 @@
-package it.digifox03.variedmobs.mixin.api;
+package it.digifox03.variedmobs.api;
 
 import it.digifox03.variedmobs.VariedMobManager;
 import net.minecraft.util.Identifier;
