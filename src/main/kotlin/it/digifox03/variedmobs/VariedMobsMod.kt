@@ -13,11 +13,11 @@ fun <T> Profiler.profiling(block: () -> T): T = startTick().run { block() }.also
 
 @Suppress("unused")
 fun init() {
-    initChoosers()
+    initSelectors()
 }
 
-object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier, VariedChooser>>() {
-    private lateinit var redirectMap: Map<Identifier, VariedChooser>
+object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier, VariedSelector>>() {
+    private lateinit var redirectMap: Map<Identifier, VariedSelector>
 
     fun redirectTexture(id: Identifier, le: LivingEntity, ctx: Ctx?): Identifier {
         val ctx1 = ctx ?: mutableMapOf()
@@ -33,13 +33,13 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
             )
 
 
-    private fun runRedirect(ob: VariedChooser, ctx: Ctx): Identifier? {
+    private fun runRedirect(ob: VariedSelector, ctx: Ctx): Identifier? {
         return ob.choose(ctx)
     }
 
-    private fun parseVaried(resource: Resource) = parseChooser(resource.inputStream)
+    private fun parseVaried(resource: Resource) = parseSelector(resource.inputStream)
 
-    override fun prepare(manager: ResourceManager, profiler: Profiler): Map<Identifier, VariedChooser> = profiler.profiling {
+    override fun prepare(manager: ResourceManager, profiler: Profiler): Map<Identifier, VariedSelector> = profiler.profiling {
         manager.allNamespaces.toList().flatMap { namespace ->
             manager.findResources(Identifier(namespace, "varied")) { true }
         }.map {
@@ -47,7 +47,7 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
         }.toMap()
     }
 
-    override fun apply(loader: Map<Identifier, VariedChooser>, manager: ResourceManager, profiler: Profiler) = profiler.profiling {
+    override fun apply(loader: Map<Identifier, VariedSelector>, manager: ResourceManager, profiler: Profiler) = profiler.profiling {
         redirectMap = loader
     }
 }

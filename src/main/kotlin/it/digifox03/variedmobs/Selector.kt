@@ -25,17 +25,17 @@ val Ctx.random
 fun Ctx.clone() = toMap().toMutableMap()
 
 
-class ResultChooser(private var result : Identifier?) : VariedChooser(id) {
+class ResultSelector(private var result : Identifier?) : VariedSelector(id) {
     companion object { val id = Identifier(MODID, "result") }
     override fun choose(ctx: MutableMap<Identifier, Any>): Identifier? = result
 }
 
-class PickChooser(private var weights : List<Double>?, private var choices : List<VariedChooser>) : VariedChooser(id) {
+class PickSelector(private var weights : List<Double>?, private var choices : List<VariedSelector>) : VariedSelector(id) {
     companion object { val id = Identifier(MODID, "pick") }
     override fun choose(ctx: Ctx): Identifier? =
             select(choices.zip(weights ?: generateSequence { 1.0 }.asIterable()).toMutableList(), ctx)
 
-    private tailrec fun select(opts: MutableList<Pair<VariedChooser, Double>>, ctx: Ctx): Identifier? =
+    private tailrec fun select(opts: MutableList<Pair<VariedSelector, Double>>, ctx: Ctx): Identifier? =
             if (opts.isEmpty()) {
                 null
             } else {
@@ -43,7 +43,7 @@ class PickChooser(private var weights : List<Double>?, private var choices : Lis
             }
 }
 
-class SeqChooser(private var choices: List<VariedChooser>) : VariedChooser(id) {
+class SeqSelector(private var choices: List<VariedSelector>) : VariedSelector(id) {
     companion object { val id = Identifier(MODID, "seq") }
 
     override fun choose(ctx: Ctx): Identifier? {
@@ -57,37 +57,37 @@ class SeqChooser(private var choices: List<VariedChooser>) : VariedChooser(id) {
     }
 }
 
-abstract class BoolChooser(type: Identifier, private var value: VariedChooser) : VariedChooser(type) {
+abstract class BoolSelector(type: Identifier, private var value: VariedSelector) : VariedSelector(type) {
     override fun choose(ctx: Ctx): Identifier? =
         if (prop(ctx.clone())) value.choose(ctx.clone()) else null
 
     abstract fun prop(ctx: Ctx): Boolean
 }
 
-class BiomeChooser(private var biome: List<Identifier>, value: VariedChooser) : BoolChooser(id, value) {
+class BiomeSelector(private var biome: List<Identifier>, value: VariedSelector) : BoolSelector(id, value) {
     companion object { val id = Identifier(MODID, "biome") }
     override fun prop(ctx: Ctx): Boolean =
         Registry.BIOME.getId(ctx.entity.biome) in biome
 }
 
-class NameChooser(regex: String, value: VariedChooser) : BoolChooser(id, value) {
+class NameSelector(regex: String, value: VariedSelector) : BoolSelector(id, value) {
     companion object { val id = Identifier(MODID, "name") }
     @Transient val reg: Regex = Regex(regex)
     override fun prop(ctx: Ctx): Boolean =
         ctx.entity.customName?.let { reg.containsMatchIn(ctx.toString()) } == true
 }
 
-class BabyChooser(value: VariedChooser) : BoolChooser(id, value) {
+class BabySelector(value: VariedSelector) : BoolSelector(id, value) {
     companion object { val id = Identifier(MODID, "baby") }
     override fun prop(ctx: Ctx): Boolean = ctx.entity.isBaby
 }
 
-abstract class BoundedPropChooser(
+abstract class BoundedPropSelector(
     type: Identifier,
     private val positions: List<Double>,
     private val weights: List<Double>?,
-    private val choices: List<VariedChooser>
-) : VariedChooser(type) {
+    private val choices: List<VariedSelector>
+) : VariedSelector(type) {
     abstract fun getter(ctx: Ctx): Double
     override fun choose(ctx: Ctx): Identifier? {
         val center = getter(ctx.clone())
@@ -110,25 +110,25 @@ abstract class BoundedPropChooser(
     }
 }
 
-class SlotChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class SlotSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "slot-prop") }
     override fun getter(ctx: Ctx) = ctx.slot?.armorStandSlotId?.toDouble() ?: 0.0
 }
 
-class CMDChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class CMDSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "cmd-prop") }
     override fun getter(ctx: Ctx) = ctx
         .slot?.let { ctx.entity.getEquippedStack(it) }
         ?.tag?.getInt("CustomModelData")?.toDouble() ?: .0
 }
 
-class ItemDamageChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class ItemDamageSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "item-damage-prop") }
     override fun getter(ctx: Ctx) = ctx
         .slot?.let { ctx.entity.getEquippedStack(it) }
@@ -136,51 +136,51 @@ class ItemDamageChooser(
         ?: 0.0
 }
 
-class HealthChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class HealthSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
      companion object { val id = Identifier(MODID, "health-prop") }
     override fun getter(ctx: Ctx) = (ctx.entity.health / ctx.entity.maxHealth).toDouble()
 }
 
-class CoordinateYChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class CoordinateYSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "y-prop") }
     override fun getter(ctx: Ctx) = ctx.entity.y
 }
 
-class CoordinateXChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class CoordinateXSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "x-prop") }
     override fun getter(ctx: Ctx) = ctx.entity.x
 }
 
-class CoordinateZChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class CoordinateZSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "z-prop") }
     override fun getter(ctx: Ctx) = ctx.entity.z
 }
 
-class AgeChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class AgeSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "age-prop") }
     override fun getter(ctx: Ctx) = ctx.entity.age.toDouble()
 }
 
-class TimeChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class TimeSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "time-prop") }
     override fun getter(ctx: Ctx) = ctx.entity.world.timeOfDay.toDouble()
 }
 
-class WeatherChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(id, positions, weights, choices) {
+class WeatherSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "weather-prop") }
     override fun getter(ctx: Ctx) = when {
         ctx.entity.world.isThundering -> 2.0
@@ -189,23 +189,23 @@ class WeatherChooser(
     }
 }
 
-class BiomeTemperatureChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(WeatherChooser.id, positions, weights, choices) {
+class BiomeTemperatureSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(WeatherSelector.id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "biome-temperature-prop") }
     override fun getter(ctx: Ctx): Double = ctx.entity.biome.temperature.toDouble()
 }
 
-class BiomeRainfallChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(WeatherChooser.id, positions, weights, choices) {
+class BiomeRainfallSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(WeatherSelector.id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "biome-rainfall-prop") }
     override fun getter(ctx: Ctx): Double = ctx.entity.biome.rainfall.toDouble()
 }
 
-class BiomeDepthChooser(
-    positions: List<Double>, weights: List<Double>?, choices: List<VariedChooser>
-) : BoundedPropChooser(WeatherChooser.id, positions, weights, choices) {
+class BiomeDepthSelector(
+    positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
+) : BoundedPropSelector(WeatherSelector.id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "biome-depth-prop") }
     override fun getter(ctx: Ctx): Double = ctx.entity.biome.depth.toDouble()
 }

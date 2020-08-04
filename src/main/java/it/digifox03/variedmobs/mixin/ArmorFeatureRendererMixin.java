@@ -1,7 +1,7 @@
 package it.digifox03.variedmobs.mixin;
 
 import it.digifox03.variedmobs.VariedMobManager;
-import it.digifox03.variedmobs.VariedMobsKt;
+import it.digifox03.variedmobs.VariedMobsModKt;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -33,7 +33,7 @@ public abstract class ArmorFeatureRendererMixin {
     @Inject(method = "getArmorTexture(Lnet/minecraft/item/ArmorItem;ZLjava/lang/String;)Lnet/minecraft/util/Identifier;", at = @At("RETURN"), cancellable = true)
     private void getArmorTexture(ArmorItem armorItem, boolean bl, String string, CallbackInfoReturnable<Identifier> cir) {
         Map<Identifier, Object> ctx = new HashMap<>();
-        ctx.put(new Identifier(VariedMobsKt.MODID, "slot"), variedMobs_slot);
+        ctx.put(new Identifier(VariedMobsModKt.MODID, "slot"), variedMobs_slot);
         cir.setReturnValue(VariedMobManager.INSTANCE.redirectTexture(cir.getReturnValue(), variedMobs_ll, ctx));
     }
 }

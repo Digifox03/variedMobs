@@ -1,6 +1,5 @@
 package it.digifox03.variedmobs
 
-import net.minecraft.util.profiler.Profiler
 import net.minecraft.world.biome.Biome
 import kotlin.random.Random
 
