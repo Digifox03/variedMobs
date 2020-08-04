@@ -1,6 +1,6 @@
 package it.digifox03.variedmobs.mixin;
 
-import it.digifox03.variedmobs.VariedMobManager;
+import it.digifox03.variedmobs.core.VariedMobManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;

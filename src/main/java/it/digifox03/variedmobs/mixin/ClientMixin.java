@@ -1,6 +1,6 @@
 package it.digifox03.variedmobs.mixin;
 
-import it.digifox03.variedmobs.VariedMobManager;
+import it.digifox03.variedmobs.core.VariedMobManager;
 import net.minecraft.resource.*;
 import net.minecraft.util.Unit;
 import org.spongepowered.asm.mixin.Debug;

@@ -1,6 +1,6 @@
 package it.digifox03.variedmobs.api
 
-import it.digifox03.variedmobs.MODID
+import it.digifox03.variedmobs.core.MODID
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
