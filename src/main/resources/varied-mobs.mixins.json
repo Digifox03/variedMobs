@@ -6,10 +6,11 @@
     "EntityMixin"
   ],
   "client": [
-    "ClientMixin",
     "ArmorFeatureRendererMixin",
+    "ClientMixin",
     "FeatureRendererMixin",
-    "LivingEntityRendererMixin"
+    "LivingEntityRendererMixin",
+    "PaintingEntityRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
