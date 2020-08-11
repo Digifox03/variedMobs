@@ -13,7 +13,7 @@ object SelectorRegistryImpl : SelectorRegistry {
     val selectors = mutableMapOf<Identifier, Type>()
 
     override fun register(id: Identifier, selector: Type) {
-        register(id, selector)
+        selectors[id] = selector
     }
 }
 

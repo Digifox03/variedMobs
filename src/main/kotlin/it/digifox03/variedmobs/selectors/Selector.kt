@@ -118,7 +118,6 @@ abstract class BoundedPropSelector(
     abstract fun getter(ctx: Ctx): Double
     override fun choose(ctx: Ctx): Identifier? {
         val center = getter(ctx.clone())
-        println("$type - center: $center")
         return when {
             weights != null -> {
                 positions
@@ -133,7 +132,7 @@ abstract class BoundedPropSelector(
                     .indexOfFirst { (min, max) -> min >= center && center < max }
                     .let { choices.getOrNull(it) }
             }
-        }?.choose(ctx.clone()).also { println("result: $it") }
+        }?.choose(ctx.clone())
     }
 }
 
