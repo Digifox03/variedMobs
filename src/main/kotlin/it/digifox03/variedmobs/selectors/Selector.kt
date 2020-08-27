@@ -6,6 +6,7 @@ import it.digifox03.variedmobs.api.*
 import it.digifox03.variedmobs.core.MODID
 import net.minecraft.entity.Entity
 import net.minecraft.util.Identifier
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import kotlin.math.abs
@@ -94,7 +95,7 @@ abstract class BoolSelector(type: Identifier, private var value: VariedSelector)
 class BiomeSelector(private var biome: List<Identifier>, value: VariedSelector) : BoolSelector(id, value) {
     companion object { val id = Identifier(MODID, "biome") }
     override fun prop(ctx: Ctx): Boolean =
-        Registry.BIOME.getId(ctx.entity.biome) in biome
+        BuiltinRegistries.BIOME.getId(ctx.entity.biome) in biome
 }
 
 class NameSelector(regex: String, value: VariedSelector) : BoolSelector(id, value) {
@@ -226,7 +227,7 @@ class BiomeRainfallSelector(
     positions: List<Double>, weights: List<Double>?, choices: List<VariedSelector>
 ) : BoundedPropSelector(WeatherSelector.id, positions, weights, choices) {
     companion object { val id = Identifier(MODID, "biome-rainfall-prop") }
-    override fun getter(ctx: Ctx): Double = ctx.entity.biome.rainfall.toDouble()
+    override fun getter(ctx: Ctx): Double = ctx.entity.biome.downfall.toDouble()
 }
 
 class BiomeDepthSelector(
