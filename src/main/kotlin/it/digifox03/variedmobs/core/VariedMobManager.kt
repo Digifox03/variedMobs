@@ -42,7 +42,7 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
 
     override fun prepare(manager: ResourceManager, profiler: Profiler): Map<Identifier, VariedSelector> = profiler.profiling {
         manager.allNamespaces.toList().flatMap { namespace ->
-            manager.findResources(Identifier(namespace, "varied")) { true }
+            manager.findResources(Identifier(namespace, "varied").path) { true }
         }.map {
             it to parseVaried(manager.getResource(it))
         }.toMap()
