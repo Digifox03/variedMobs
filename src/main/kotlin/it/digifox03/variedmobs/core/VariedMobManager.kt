@@ -2,8 +2,6 @@ package it.digifox03.variedmobs.core
 
 import it.digifox03.variedmobs.api.Ctx
 import it.digifox03.variedmobs.api.Redirector
-import it.digifox03.variedmobs.core.VariedSelector
-import it.digifox03.variedmobs.core.parseSelector
 import net.minecraft.entity.LivingEntity
 import net.minecraft.resource.Resource
 import net.minecraft.resource.ResourceManager
@@ -45,7 +43,13 @@ object VariedMobManager : SinglePreparationResourceReloadListener<Map<Identifier
             manager.findResources(Identifier(namespace, "varied").path) { true }
         }.map {
             it to parseVaried(manager.getResource(it))
-        }.toMap()
+        }.toMap().also { data -> data.map { (id, sel) ->
+            sel.validate()?.let { "$id: $it" }
+        }.filterNotNull().joinToString("\n").let {
+            if (it.isNotEmpty()) {
+                throw Exception("error in the resource pack:\n\n$it")
+            }
+        } }
     }
 
     override fun apply(loader: Map<Identifier, VariedSelector>, manager: ResourceManager, profiler: Profiler) = profiler.profiling {

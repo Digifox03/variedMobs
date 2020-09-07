@@ -58,4 +58,5 @@ fun parseSelector(input: InputStream): VariedSelector =
 
 abstract class VariedSelector(val type: Identifier) {
     abstract fun choose(ctx: Ctx): Identifier?
+    abstract fun validate(): String?
 }

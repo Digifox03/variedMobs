@@ -7,7 +7,6 @@ import it.digifox03.variedmobs.core.MODID
 import net.minecraft.entity.Entity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.BuiltinRegistries
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import kotlin.math.abs
 
@@ -43,9 +42,23 @@ val Entity.biome: Biome
 class ResultSelector(private var result : Identifier?) : VariedSelector(id) {
     companion object { val id = Identifier(MODID, "result") }
     override fun choose(ctx: MutableMap<Identifier, Any>): Identifier? = result
+    override fun validate(): String? = null
 }
 
-class PickSelector(private var weights : List<Double>?, private var choices : List<VariedSelector>) : VariedSelector(id) {
+abstract class ChoicesSelector(type: Identifier, protected var choices : List<VariedSelector>) : VariedSelector(type) {
+    override fun validate(): String? {
+        // Thanks to GSON `choices` might be null!
+        return if ((choices as List<VariedSelector>?) == null) {
+            "choices field is missing"
+        } else {
+            choices.asSequence().mapIndexed { i, sel ->
+                sel.validate()?.let { "choices.$i: $it" }
+            }.filterNotNull().firstOrNull()
+        }
+    }
+}
+
+class PickSelector(private var weights : List<Double>?, choices : List<VariedSelector>) : ChoicesSelector(id, choices) {
     companion object { val id = Identifier(MODID, "pick") }
     override fun choose(ctx: Ctx): Identifier? =
             select(choices.zip(weights ?: generateSequence { 1.0 }.asIterable()).toMutableList(), ctx)
@@ -58,7 +71,7 @@ class PickSelector(private var weights : List<Double>?, private var choices : Li
             }
 }
 
-class SeqSelector(private var choices: List<VariedSelector>) : VariedSelector(id) {
+class SeqSelector(choices: List<VariedSelector>) : ChoicesSelector(id, choices) {
     companion object { val id = Identifier(MODID, "seq") }
 
     override fun choose(ctx: Ctx): Identifier? {
@@ -72,7 +85,13 @@ class SeqSelector(private var choices: List<VariedSelector>) : VariedSelector(id
     }
 }
 
-class NotSelector(private var value: VariedSelector) : VariedSelector(id) {
+abstract class ValueSelector(type: Identifier, protected var value: VariedSelector) : VariedSelector(type) {
+    override fun validate(): String? {
+        return (value as VariedSelector?)?.validate()?.let { "value: $it" } ?: "value is null"
+    }
+}
+
+class NotSelector(value: VariedSelector) : ValueSelector(id, value) {
     companion object { val id = Identifier(MODID, "not") }
 
     override fun choose(ctx: Ctx): Identifier? =
@@ -85,7 +104,7 @@ class NotSelector(private var value: VariedSelector) : VariedSelector(id) {
             }
 }
 
-abstract class BoolSelector(type: Identifier, private var value: VariedSelector) : VariedSelector(type) {
+abstract class BoolSelector(id: Identifier, value: VariedSelector) : ValueSelector(id, value) {
     override fun choose(ctx: Ctx): Identifier? =
         if (prop(ctx.clone())) value.choose(ctx.clone()) else null
 
@@ -114,8 +133,8 @@ abstract class BoundedPropSelector(
     type: Identifier,
     private val positions: List<Double>,
     private val weights: List<Double>?,
-    private val choices: List<VariedSelector>
-) : VariedSelector(type) {
+    choices: List<VariedSelector>
+) : ChoicesSelector(type, choices) {
     abstract fun getter(ctx: Ctx): Double
     override fun choose(ctx: Ctx): Identifier? {
         val center = getter(ctx.clone())
@@ -134,6 +153,14 @@ abstract class BoundedPropSelector(
                     .let { choices.getOrNull(it) }
             }
         }?.choose(ctx.clone())
+    }
+
+    override fun validate(): String? {
+        return if ((positions as List<Double>?) == null) {
+            "positions is null"
+        } else {
+            super.validate()
+        }
     }
 }
 
