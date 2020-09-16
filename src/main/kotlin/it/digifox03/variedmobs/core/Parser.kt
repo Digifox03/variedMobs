@@ -22,17 +22,14 @@ object VariedSelectorSerializer : JsonSerializer<VariedSelector>, JsonDeserializ
         context.serialize(src, typeOfSrc)
 
     override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext): VariedSelector {
-        return try {
-            if (json.isJsonPrimitive && json.asJsonPrimitive.isString) {
-                ResultSelector(context.deserialize(json, Identifier::class.java))
-            } else {
-                SelectorRegistryImpl.selectors[context.deserialize(json.asJsonObject["type"], Identifier::class.java)]?.let {
-                    context.deserialize<VariedSelector>(json, it)
-                } ?: ResultSelector(null)
-            }
-        } catch (err: JsonSyntaxException) {
-            System.err.println(err.localizedMessage)
+        return if (json.isJsonNull) {
             ResultSelector(null)
+        } else if (json.isJsonPrimitive && json.asJsonPrimitive.isString) {
+            ResultSelector(context.deserialize(json, Identifier::class.java))
+        } else {
+            SelectorRegistryImpl.selectors[context.deserialize(json.asJsonObject["type"], Identifier::class.java)]?.let {
+                context.deserialize<VariedSelector>(json, it)
+            } ?: ResultSelector(null)
         }
     }
 }

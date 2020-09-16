@@ -48,11 +48,12 @@ class ResultSelector(private var result : Identifier?) : VariedSelector(id) {
 abstract class ChoicesSelector(type: Identifier, protected var choices : List<VariedSelector>) : VariedSelector(type) {
     override fun validate(): String? {
         // Thanks to GSON `choices` might be null!
-        return if ((choices as List<VariedSelector>?) == null) {
+        return if ((choices as List<VariedSelector?>?) == null) {
             "choices field is missing"
         } else {
-            choices.asSequence().mapIndexed { i, sel ->
-                sel.validate()?.let { "choices.$i: $it" }
+
+            (choices as List<VariedSelector?>).asSequence().mapIndexed { i, sel ->
+                sel?.validate()?.let { "choices.$i: $it" }
             }.filterNotNull().firstOrNull()
         }
     }
@@ -87,7 +88,7 @@ class SeqSelector(choices: List<VariedSelector>) : ChoicesSelector(id, choices) 
 
 abstract class ValueSelector(type: Identifier, protected var value: VariedSelector) : VariedSelector(type) {
     override fun validate(): String? {
-        return (value as VariedSelector?)?.validate()?.let { "value: $it" } ?: "value is null"
+        return (value as VariedSelector?)?.validate()?.let { "value: $it" }
     }
 }
 
@@ -143,7 +144,7 @@ abstract class BoundedPropSelector(
                 positions
                     .zip(weights)
                     .map { (v, w) -> abs(center - v) / w }
-                    .let { it.indexOf(it.min()) }
+                    .let { it.indexOf(it.minOrNull()) }
                     .let { choices.getOrNull(it)  }
             }
             else -> {
