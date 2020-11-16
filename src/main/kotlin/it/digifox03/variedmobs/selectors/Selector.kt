@@ -1,13 +1,14 @@
 package it.digifox03.variedmobs.selectors
 
-import it.digifox03.variedmobs.user.VariedMobsEntity
-import it.digifox03.variedmobs.core.VariedSelector
 import it.digifox03.variedmobs.api.*
 import it.digifox03.variedmobs.core.MODID
+import it.digifox03.variedmobs.core.VariedSelector
+import it.digifox03.variedmobs.user.VariedMobsEntity
 import net.minecraft.entity.Entity
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.BuiltinRegistries
+import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
+import net.minecraft.world.biome.BiomeKeys
 import kotlin.math.abs
 
 @Suppress("unused")
@@ -37,7 +38,14 @@ fun init() {
 }
 
 val Entity.biome: Biome
-    get() = (this as VariedMobsEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
+    get() =
+        (this as VariedMobsEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos) ?:
+        world.registryManager[Registry.BIOME_KEY][BiomeKeys.THE_VOID]!!
+
+val Entity.biomeId: Identifier
+    get() = world.registryManager[Registry.BIOME_KEY].getId(
+        (this as VariedMobsEntity).variedMobs_spawnBiome ?: world.getBiome(blockPos)
+    ) ?: BiomeKeys.THE_VOID.value
 
 class ResultSelector(private var result : Identifier?) : VariedSelector(id) {
     companion object { val id = Identifier(MODID, "result") }
@@ -114,8 +122,7 @@ abstract class BoolSelector(id: Identifier, value: VariedSelector) : ValueSelect
 
 class BiomeSelector(private var biome: List<Identifier>, value: VariedSelector) : BoolSelector(id, value) {
     companion object { val id = Identifier(MODID, "biome") }
-    override fun prop(ctx: Ctx): Boolean =
-        BuiltinRegistries.BIOME.getId(ctx.entity.biome) in biome
+    override fun prop(ctx: Ctx): Boolean = ctx.entity.biomeId in biome
 }
 
 class NameSelector(regex: String, value: VariedSelector) : BoolSelector(id, value) {
@@ -150,17 +157,25 @@ abstract class BoundedPropSelector(
             else -> {
                 positions
                     .zipWithNext()
-                    .indexOfFirst { (min, max) -> min >= center && center < max }
-                    .let { choices.getOrNull(it) }
+                    .indexOfFirst { (min, max) -> (min <= center && center < max).also {
+                        println("min: $min, max: $max, center: $center")
+                    } }
+                    .let { choices.getOrNull(it.also { println("Thingie : $it ##################") }) ?: throw Exception("nani?") }
             }
         }?.choose(ctx.clone())
     }
 
     override fun validate(): String? {
-        return if ((positions as List<Double>?) == null) {
-            "positions is null"
-        } else {
-            super.validate()
+        return when {
+            (positions as List<Double>?) == null -> {
+                "positions is null"
+            }
+            positions.size - 1 != choices.size -> {
+                "positions count and choices count mismatched"
+            }
+            else -> {
+                super.validate()
+            }
         }
     }
 }
