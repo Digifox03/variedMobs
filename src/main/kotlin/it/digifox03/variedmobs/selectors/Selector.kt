@@ -10,6 +10,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.BiomeKeys
 import kotlin.math.abs
+import kotlin.text.*
 
 @Suppress("unused")
 fun init() {
@@ -125,11 +126,10 @@ class BiomeSelector(private var biome: List<Identifier>, value: VariedSelector) 
     override fun prop(ctx: Ctx): Boolean = ctx.entity.biomeId in biome
 }
 
-class NameSelector(regex: String, value: VariedSelector) : BoolSelector(id, value) {
+class NameSelector(var regex: String, value: VariedSelector) : BoolSelector(id, value) {
     companion object { val id = Identifier(MODID, "name") }
-    @Transient val reg: Regex = Regex(regex)
     override fun prop(ctx: Ctx): Boolean =
-        ctx.entity.customName?.let { reg.containsMatchIn(ctx.toString()) } == true
+        ctx.entity.customName?.let { Regex(regex).containsMatchIn(it.toString()) } == true
 }
 
 class BabySelector(value: VariedSelector) : BoolSelector(id, value) {
