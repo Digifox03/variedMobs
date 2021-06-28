@@ -1,18 +1,20 @@
 {
   "required": true,
   "package": "it.digifox03.variedmobs.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "EntityMixin"
-  ],
+  "compatibilityLevel": "JAVA_16",
   "client": [
     "ArmorFeatureRendererMixin",
-    "ClientMixin",
+    "EndermanEyeFeatureRendererMixin",
+    "EyesFeatureRendererMixin",
     "FeatureRendererMixin",
     "LivingEntityRendererMixin",
-    "PaintingEntityRenderMixin"
+    "PaintingEntityRenderMixin",
+    "PhantomEyeFeatureRendererMixin",
+    "SpiderEyeFeatureRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+  ]
 }

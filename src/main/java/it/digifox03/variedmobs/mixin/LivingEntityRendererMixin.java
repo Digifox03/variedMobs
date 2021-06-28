@@ -1,9 +1,10 @@
 package it.digifox03.variedmobs.mixin;
 
-import it.digifox03.variedmobs.core.VariedMobManager;
+import it.digifox03.variedmobs.RedirectContext;
+import it.digifox03.variedmobs.VariedMobs;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -14,13 +15,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin<T extends LivingEntity> extends EntityRenderer<T> {
-    protected LivingEntityRendererMixin(EntityRenderDispatcher dispatcher) {
-        super(dispatcher);
-    }
+import java.util.HashMap;
+import java.util.Map;
 
-    public T variedMobs_l;
+@Mixin(LivingEntityRenderer.class)
+abstract class LivingEntityRendererMixin<T extends LivingEntity> extends EntityRenderer<T> {
+    protected LivingEntityRendererMixin(EntityRendererFactory.Context ctx) { super(ctx); }
+
+    protected T variedMobs_l;
 
     @Inject(
             at = @At("HEAD"),
@@ -35,6 +37,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> extends 
             method = "getRenderLayer(Lnet/minecraft/entity/LivingEntity;ZZZ)Lnet/minecraft/client/render/RenderLayer;"
     )
     public Identifier getRenderLayer(Identifier id) {
-        return VariedMobManager.INSTANCE.redirectTexture(id, variedMobs_l, null);
+        Map<Identifier, Object> ctx = new HashMap<>();
+        ctx.put(RedirectContext.entity, variedMobs_l);
+        return VariedMobs.redirectTexture(id, ctx);
     }
 }

@@ -9,9 +9,11 @@ pluginManagement {
     }
 
     val kotlinVersion: String by settings
+    val loomVersion: String by settings
 
     plugins {
-        id("org.jetbrains.kotlin.jvm") version kotlinVersion
-        id("fabric-loom") version "0.9-SNAPSHOT"
+        kotlin("jvm") version kotlinVersion
+        kotlin("plugin.serialization") version kotlinVersion
+        id("fabric-loom") version loomVersion
     }
 }

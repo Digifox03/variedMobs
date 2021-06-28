@@ -2,8 +2,7 @@
   <configuration default="false" name="Minecraft Client" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main" />
     <module name="variedMobs.main" />
-    <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="VM_PARAMETERS" value="-XX:+ShowCodeDetailsInExceptionMessages -Dfabric.dli.config=/home/digifox03/Progetti/mc/variedMobs/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.fabricmc.loader.launch.knot.KnotClient" />
+    <option name="VM_PARAMETERS" value="-XX:+ShowCodeDetailsInExceptionMessages -Dfabric.dli.config=$PROJECT_DIR$/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.fabricmc.loader.launch.knot.KnotClient -Dmixin.debug.export=true" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run/" />
     <method v="2">
       <option name="Make" enabled="true" />
