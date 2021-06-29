@@ -34,6 +34,8 @@ internal object VariedMobsSelectors: VariedMobsSelectorRegister {
         }
         polymorphic(StringProp::class) {
             subclass(BiomeStringProp::class)
+            subclass(ItemNameStringProp::class)
+            subclass(ItemTypeStringProp::class)
             subclass(NameStringProp::class)
         }
         polymorphic(ValueProp::class) {

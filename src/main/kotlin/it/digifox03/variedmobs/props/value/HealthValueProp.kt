@@ -9,7 +9,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.util.Identifier
 
 @Serializable
-@SerialName("${VariedMobs.modId}:health")
+@SerialName("${VariedMobs.modId}:entity_health")
 internal class HealthValueProp(override val entity: EntityProp? = null): EntityBasedProp<Float>(), ValueProp {
     override fun read(context: Map<Identifier, Any>): Float {
         val entity = getEntity(context)

@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier
 @Serializable
 @SerialName("${VariedMobs.modId}:range")
 class RangeSelector(
-    private val use: ValueProp,
+    private val `when`: ValueProp,
     private val options: ArrayList<RangeOption>
 ): Selector {
     @Serializable
@@ -18,17 +18,17 @@ class RangeSelector(
         val aboveOrEqual: Float? = null,
         val below: Float? = null,
         val belowOrEqual: Float? = null,
-        val use: Selector
+        val then: Selector
     )
 
     override fun select(context: Map<Identifier, Any>): Identifier {
-        val value = use.read(context)
+        val value = `when`.read(context)
         for (option in options) {
             if (option.above?.let { value > it } == false) continue
             if (option.aboveOrEqual?.let { value >= it } == false) continue
             if (option.below?.let { value < it } == false) continue
             if (option.belowOrEqual?.let { value <= it } == false) continue
-            return option.use.select(context)
+            return option.then.select(context)
         }
         throw IllegalStateException("Missing default clause in selector")
     }

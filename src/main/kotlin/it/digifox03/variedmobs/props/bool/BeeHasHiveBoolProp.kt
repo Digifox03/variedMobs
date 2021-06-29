@@ -9,7 +9,7 @@ import net.minecraft.entity.passive.BeeEntity
 import net.minecraft.util.Identifier
 
 @Serializable
-@SerialName("${VariedMobs.modId}:bee-has-hive")
+@SerialName("${VariedMobs.modId}:bee_has_hive")
 internal class BeeHasHiveBoolProp(override val entity: EntityProp? = null): EntityBasedProp<Boolean>(), BoolProp {
     override fun read(context: Map<Identifier, Any>): Boolean {
         val entity = getEntity(context)

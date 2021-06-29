@@ -12,22 +12,26 @@ import net.minecraft.util.Identifier
 @Serializable
 @SerialName("${VariedMobs.modId}:string")
 class StringSelector(
-    private val use: StringProp,
+    private val `when`: StringProp,
     private val options: ArrayList<StringOption>,
 ): Selector {
     @Serializable
     class StringOption(
-        val regex: Regex? = null,
-        val exact: String? = null,
-        val use: Selector
+        val containPattern: Regex? = null,
+        val doesNotContainPattern: Regex? = null,
+        val matchExactly: String? = null,
+        val doesNotMatchExactly: String? = null,
+        val then: Selector
     )
 
     override fun select(context: Map<Identifier, Any>): Identifier {
-        val value = use.read(context)
+        val value = `when`.read(context)
         for (option in options) {
-            if (option.regex?.containsMatchIn(value) == false) continue
-            if (option.exact?.equals(value) == false) continue
-            return option.use.select(context)
+            if (option.containPattern?.containsMatchIn(value) == false) continue
+            if (option.matchExactly?.equals(value) == false) continue
+            if (option.doesNotContainPattern?.containsMatchIn(value) == true) continue
+            if (option.doesNotMatchExactly?.equals(value) == true) continue
+            return option.then.select(context)
         }
         throw IllegalStateException("Missing default clause in selector")
     }

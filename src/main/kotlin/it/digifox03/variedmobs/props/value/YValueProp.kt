@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import net.minecraft.util.Identifier
 
 @Serializable
-@SerialName("${VariedMobs.modId}:y")
+@SerialName("${VariedMobs.modId}:entity_y")
 internal class YValueProp(override val entity: EntityProp? = null): EntityBasedProp<Float>(), ValueProp {
     override fun read(context: Map<Identifier, Any>): Float {
         val entity = getEntity(context)

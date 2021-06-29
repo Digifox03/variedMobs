@@ -9,7 +9,7 @@ import net.minecraft.entity.passive.FoxEntity
 import net.minecraft.util.Identifier
 
 @Serializable
-@SerialName("${VariedMobs.modId}:fox-is-sitting")
+@SerialName("${VariedMobs.modId}:fox_is_sitting")
 internal class FoxIsSittingBoolProp(override val entity: EntityProp? = null) : EntityBasedProp<Boolean>(), BoolProp {
     override fun read(context: Map<Identifier, Any>): Boolean {
         val entity = getEntity(context)
